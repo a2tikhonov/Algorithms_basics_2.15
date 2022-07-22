@@ -129,7 +129,7 @@ public class IntegerListImpl implements IntegerList {
     public boolean contains(Integer item) {
         int min = 0;
         int max = index - 1;
-        sort();
+        sort(this.arr, 0, index - 1);
         while (min <= max) {
             int mid = (min + max) / 2;
 
@@ -255,32 +255,36 @@ public class IntegerListImpl implements IntegerList {
         }
     }
 
-    private void sort() {
-        for (int i = 1; i < index; i++) {
-            int temp = arr[i];
-            int j = i;
-            while (j > 0 && arr[j - 1] >= temp) {
-                arr[j] = arr[j - 1];
-                j--;
-            }
-            arr[j] = temp;
+    private void sort(Integer[] arr, int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(arr, begin, end);
+
+            sort(arr, begin, partitionIndex - 1);
+            sort(arr, partitionIndex + 1, end);
         }
     }
 
-/*    private void sortSelection() {
-        for (int i = 0; i < index - 1; i++) {
-            int minElementIndex = i;
-            for (int j = i + 1; j < index; j++) {
-                if (arr[j] < arr[minElementIndex]) {
-                    minElementIndex = j;
-                }
-            }
-            int tmp = arr[i];
-            arr[i] = arr[minElementIndex];
-            arr[minElementIndex] = tmp;
-        }
-    }*/
+    private int partition(Integer[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
 
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, end);
+        return i + 1;
+    }
+
+    private void swapElements(Integer[] arr, int left, int right) {
+        int temp = arr[left];
+        arr[left] = arr[right];
+        arr[right] = temp;
+    }
 }
 
 
